@@ -1,0 +1,225 @@
+mysql-sql> select contactname from customers where customerid is (
+       ... ;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(' at line 1
+mysql-sql> select contactname from customers where customerid in (
+       ... select distinct (customerid) from orders);
++-------------------------+
+| contactname             |
++-------------------------+
+| Maria Anders            |
+| Ana Trujillo            |
+| Antonio Moreno          |
+| Thomas Hardy            |
+| Christina Berglund      |
+| Hanna Moos              |
+| Frdrique Citeaux        |
+| Martn Sommer            |
+| Laurence Lebihan        |
+| Elizabeth Lincoln       |
+| Victoria Ashworth       |
+| Patricio Simpson        |
+| Francisco Chang         |
+| Yang Wang               |
+| Pedro Afonso            |
+| Elizabeth Brown         |
+| Sven Ottlieb            |
+| Janine Labrune          |
+| Ann Devon               |
+| Roland Mendel           |
+| Aria Cruz               |
+| Martine Ranc            |
+| Maria Larsson           |
+| Peter Franken           |
+| Carine Schmitt          |
+| Paolo Accorti           |
+| Lino Rodriguez          |
+| Eduardo Saavedra        |
+| Jos Pedro Freyre        |
+| Andr Fonseca            |
+| Howard Snyder           |
+| Manuel Pereira          |
+| Mario Pontes            |
+| Carlos Hernndez         |
+| Yoshi Latimer           |
+| Patricia McKenna        |
+| Helen Bennett           |
+| Philip Cramer           |
+| Daniel Tonini           |
+| Annette Roulet          |
+| Yoshi Tannamuri         |
+| John Steel              |
+| Renate Messner          |
+| Jaime Yorres            |
+| Carlos Gonzlez          |
+| Felipe Izquierdo        |
+| Fran Wilson             |
+| Giovanni Rovelli        |
+| Catherine Dewey         |
+| Jean Fresnire           |
+| Alexander Feuer         |
+| Simon Crowther          |
+| Yvonne Moncada          |
+| Rene Phillips           |
+| Henriette Pfalzheim     |
+| Guillermo Fernndez      |
+| Georg Pipps             |
+| Isabel de Castro        |
+| Bernardo Batista        |
+| Lcia Carvalho           |
+| Horst Kloss             |
+| Sergio Gutirrez         |
+| Paula Wilson            |
+| Maurizio Moroni         |
+| Janete Limeira          |
+| Michael Holz            |
+| Alejandra Camino        |
+| Jonas Bergulfsen        |
+| Jose Pavarotti          |
+| Hari Kumar              |
+| Jytte Petersen          |
+| Dominique Perrier       |
+| Art Braunschweiger      |
+| Pascale Cartrain        |
+| Liz Nixon               |
+| Liu Wong                |
+| Karin Josephs           |
+| Miguel Angel Paolino    |
+| Anabela Domingues       |
+| Helvetius Nagy          |
+| Palle Ibsen             |
+| Mary Saveley            |
+| Paul Henriot            |
+| Rita Mller              |
+| Pirkko Koskitalo        |
+| Paula Parente           |
+| Karl Jablonski          |
+| Matti Karttunen         |
+| Zbyszek Piestrzeniewicz |
++-------------------------+
+89 rows in set (0.00 sec)
+mysql-sql> select B.contactname from orders A
+       ... right outer join customers B on A.customerid = B.customerid
+       ... where A.customerid is null;
++----------------+
+| contactname    |
++----------------+
+| Diego Roel     |
+| Marie Bertrand |
+| Val2           |
+| Valon Hoti     |
++----------------+
+4 rows in set (0.02 sec)
+mysql-sql> select contactname from customers where customerid not in (
+       ... select dis;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 2
+mysql-sql> select contactname from customers where customerid not in (
+       ... ;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql-sql> select contactname from customer where customerid not in (
+       ... select distinct(customerid) from orders;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 2
+mysql-sql> select contactname from customer where customerid not in (
+       ... select distinct(customerid) from orders);
+ERROR: 1146 (42S02): Table 'northwind.customer' doesn't exist
+mysql-sql> select contactname from customers where customerid not in (
+       ... select distinct(customerid) from orders);
++----------------+
+| contactname    |
++----------------+
+| Diego Roel     |
+| Marie Bertrand |
+| Val2           |
+| Valon Hoti     |
++----------------+
+4 rows in set (0.01 sec)
+mysql-sql> select productname from products where productid not in(
+       ... select distinct(productid) from orderdetails);
+Empty set (0.05 sec)
+mysql-sql> select productname from products(
+       ... select distinct(productid) from orderdetails);
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(
+select distinct(productid) from orderdetails)' at line 1
+mysql-sql> select productname from products where productid in(
+       ... select distinct(productid) from orderdetails);
++----------------------------------+
+| productname                      |
++----------------------------------+
+| Alice Mutton                     |
+| Aniseed Syrup                    |
+| Boston Crab Meat                 |
+| Camembert Pierrot                |
+| Carnarvon Tigers                 |
+| Chai                             |
+| Chang                            |
+| Chartreuse verte                 |
+| Chef Anton's Cajun Seasoning     |
+| Chef Anton's Gumbo Mix           |
+| Chocolade                        |
+| Cte de Blaye                     |
+| Escargots de Bourgogne           |
+| Filo Mix                         |
+| Flotemysost                      |
+| Geitost                          |
+| Genen Shouyu                     |
+| Gnocchi di nonna Alice           |
+| Gorgonzola Telino                |
+| Grandma's Boysenberry Spread     |
+| Gravad lax                       |
+| Guaran Fantstica                 |
+| Gudbrandsdalsost                 |
+| Gula Malacca                     |
+| Gumbr Gummibrchen                |
+| Gustaf's Knckebrd                |
+| Ikura                            |
+| Inlagd Sill                      |
+| Ipoh Coffee                      |
+| Jack's New England Clam Chowder  |
+| Konbu                            |
+| Lakkalikri                       |
+| Laughing Lumberjack Lager        |
+| Longlife Tofu                    |
+| Louisiana Fiery Hot Pepper Sauce |
+| Louisiana Hot Spiced Okra        |
+| Manjimup Dried Apples            |
+| Mascarpone Fabioli               |
+| Maxilaku                         |
+| Mishi Kobe Niku                  |
+| Mozzarella di Giovanni           |
+| Nord-Ost Matjeshering            |
+| Northwoods Cranberry Sauce       |
+| NuNuCa Nu-Nougat-Creme           |
+| Original Frankfurter grne Soe    |
+| Outback Lager                    |
+| Pavlova                          |
+| Perth Pasties                    |
+| Pt chinois                       |
+| Queso Cabrales                   |
+| Queso Manchego La Pastora        |
+| Raclette Courdavault             |
+| Ravioli Angelo                   |
+| Rd Kaviar                        |
+| Rhnbru Klosterbier               |
+| Rogede sild                      |
+| Rssle Sauerkraut                 |
+| Sasquatch Ale                    |
+| Schoggi Schokolade               |
+| Scottish Longbreads              |
+| Singaporean Hokkien Fried Mee    |
+| Sir Rodney's Marmalade           |
+| Sir Rodney's Scones              |
+| Sirop d'rable                    |
+| Spegesild                        |
+| Steeleye Stout                   |
+| Tarte au sucre                   |
+| Teatime Chocolate Biscuits       |
+| Thringer Rostbratwurst           |
+| Tofu                             |
+| Tourtire                         |
+| Tunnbrd                          |
+| Uncle Bob's Organic Dried Pears  |
+| Valkoinen suklaa                 |
+| Vegie-spread                     |
+| Wimmers gute Semmelkndel         |
+| Zaanse koeken                    |
++----------------------------------+
+77 rows in set (0.13 sec)

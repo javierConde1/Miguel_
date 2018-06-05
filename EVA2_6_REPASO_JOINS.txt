@@ -1,0 +1,304 @@
+MySQL Shell 1.0.11
+
+Copyright (c) 2016, 2017, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+
+Currently in JavaScript mode. Use \sql to switch to SQL mode and execute queries.
+mysql-js> \sql
+Switching to SQL mode... Commands end with ;
+mysql-sql> \connect -c root@localhost
+Creating a Classic Session to 'root@localhost'
+Enter password:
+Your MySQL connection id is 101
+Server version: 5.5.8-log MySQL Community Server (GPL)
+No default schema selected; type \use <schema> to set one.
+mysql-sql> use evaluacion_2;
+Query OK, 0 rows affected (0.06 sec)
+mysql-sql> show tables;
++------------------------+
+| Tables_in_evaluacion_2 |
++------------------------+
+| a                      |
+| alumno                 |
+| b                      |
+| detalle                |
+| detalle_materia        |
+| hijo                   |
+| hijos_2                |
+| horarios               |
+| maestro                |
+| materia                |
+| padre                  |
++------------------------+
+11 rows in set (0.36 sec)
+mysql-sql> select * from a;
++----+--------+
+| id | nombre |
++----+--------+
+|  1 | A      |
+|  2 | B      |
+|  3 | C      |
+|  4 | D      |
++----+--------+
+4 rows in set (0.05 sec)
+mysql-sql> select * from b;
++----+--------+
+| id | nombre |
++----+--------+
+|  1 | X      |
+|  2 | Y      |
+|  3 | Z      |
+|  4 | A      |
+|  5 | B      |
++----+--------+
+5 rows in set (0.00 sec)
+mysql-sql> select * from A inner join B on A.nombre = B.nombre;
++----+--------+----+--------+
+| id | nombre | id | nombre |
++----+--------+----+--------+
+|  1 | A      |  4 | A      |
+|  2 | B      |  5 | B      |
++----+--------+----+--------+
+2 rows in set (0.03 sec)
+mysql-sql> select * from A left outer join B on A.nombre = B.nombre;
++----+--------+------+--------+
+| id | nombre | id   | nombre |
++----+--------+------+--------+
+|  1 | A      |    4 | A      |
+|  2 | B      |    5 | B      |
+|  3 | C      | null | null   |
+|  4 | D      | null | null   |
++----+--------+------+--------+
+4 rows in set (0.00 sec)
+mysql-sql> select * from A right outer join B on A.nombre = B.nombre;
++------+--------+----+--------+
+| id   | nombre | id | nombre |
++------+--------+----+--------+
+| null | null   |  1 | X      |
+| null | null   |  2 | Y      |
+| null | null   |  3 | Z      |
+|    1 | A      |  4 | A      |
+|    2 | B      |  5 | B      |
++------+--------+----+--------+
+5 rows in set (0.00 sec)
+mysql-sql> select * from A left outer join B on A.nombre = B.nombre where B.nombre is null;
++----+--------+------+--------+
+| id | nombre | id   | nombre |
++----+--------+------+--------+
+|  3 | C      | null | null   |
+|  4 | D      | null | null   |
++----+--------+------+--------+
+2 rows in set (0.03 sec)
+mysql-sql> select * from A right outer join B on A.nombre = B.nombre where A.nombre is null;
++------+--------+----+--------+
+| id   | nombre | id | nombre |
++------+--------+----+--------+
+| null | null   |  1 | X      |
+| null | null   |  2 | Y      |
+| null | null   |  3 | Z      |
++------+--------+----+--------+
+3 rows in set (0.00 sec)
+mysql-sql> select * from A union select * from B;
++----+--------+
+| id | nombre |
++----+--------+
+|  1 | A      |
+|  2 | B      |
+|  3 | C      |
+|  4 | D      |
+|  1 | X      |
+|  2 | Y      |
+|  3 | Z      |
+|  4 | A      |
+|  5 | B      |
++----+--------+
+9 rows in set (0.09 sec)
+mysql-sql> (select * from A inner join B on A.nombre = B.nombre) union
+       ... (select * from A left outer join B on A.nombre = B.nombre where A.nombre is null) union
+       ... ;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 2
+mysql-sql> (select * from A inner join B on A.nombre = B.nombre) union
+       ... (select * from A left outer join B on A.nombre = B.nombre where B.nombre is null) union
+       ... (select * from A right outer join B on A.nombre = B.nombre where A.nombre is null);
++------+--------+------+--------+
+| id   | nombre | id   | nombre |
++------+--------+------+--------+
+|    1 | A      |    4 | A      |
+|    2 | B      |    5 | B      |
+|    3 | C      | null | null   |
+|    4 | D      | null | null   |
+| null | null   |    1 | X      |
+| null | null   |    2 | Y      |
+| null | null   |    3 | Z      |
++------+--------+------+--------+
+7 rows in set (0.05 sec)
+mysql-sql> user northwind;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'user northwind' at line 1
+mysql-sql> use northwind;
+Query OK, 0 rows affected (0.03 sec)
+mysql-sql> show tables;
++----------------------+
+| Tables_in_northwind  |
++----------------------+
+| categories           |
+| customercustomerdemo |
+| customerdemographics |
+| customers            |
+| employees            |
+| employeeterritories  |
+| orderdetails         |
+| orders               |
+| products             |
+| region               |
+| shippers             |
+| suppliers            |
+| territories          |
++----------------------+
+13 rows in set (0.22 sec)
+mysql-sql> select A.orderid, B.contactname from orders A inner join customers B on A.customerid = B.customerid limit 30;
++---------+----------------+
+| orderid | contactname    |
++---------+----------------+
+|   10643 | Maria Anders   |
+|   10692 | Maria Anders   |
+|   10702 | Maria Anders   |
+|   10835 | Maria Anders   |
+|   10952 | Maria Anders   |
+|   11011 | Maria Anders   |
+|   10308 | Ana Trujillo   |
+|   10625 | Ana Trujillo   |
+|   10759 | Ana Trujillo   |
+|   10926 | Ana Trujillo   |
+|   10365 | Antonio Moreno |
+|   10507 | Antonio Moreno |
+|   10535 | Antonio Moreno |
+|   10573 | Antonio Moreno |
+|   10677 | Antonio Moreno |
+|   10682 | Antonio Moreno |
+|   10856 | Antonio Moreno |
+|   10355 | Thomas Hardy   |
+|   10383 | Thomas Hardy   |
+|   10453 | Thomas Hardy   |
+|   10558 | Thomas Hardy   |
+|   10707 | Thomas Hardy   |
+|   10741 | Thomas Hardy   |
+|   10743 | Thomas Hardy   |
+|   10768 | Thomas Hardy   |
+|   10793 | Thomas Hardy   |
+|   10864 | Thomas Hardy   |
+|   10920 | Thomas Hardy   |
+|   10953 | Thomas Hardy   |
+|   11016 | Thomas Hardy   |
++---------+----------------+
+30 rows in set (0.16 sec)
+mysql-sql> select A.orderid, B.contactname from orders A left outer join customers B on A.customerid = B.customerid  where B.custoerid is null limit 30;
+ERROR: 1054 (42S22): Unknown column 'B.custoerid' in 'where clause'
+mysql-sql> select A.orderid, B.contactname from orders A left outer join customers B on A.customerid = B.customerid  where A.custoerid is null limit 30;
+ERROR: 1054 (42S22): Unknown column 'A.custoerid' in 'where clause'
+mysql-sql> select A.orderid, B.contactname from orders A left outer join customers B on A.customerid = B.customerid  where B.customerid is null limit 30;
+Empty set (0.14 sec)
+mysql-sql> select B.contactname from orders A right outer join customers B on A.customerid = B.customerid
+       ... where a.customerid is null;
++----------------+
+| contactname    |
++----------------+
+| Diego Roel     |
+| Marie Bertrand |
+| Val2           |
+| Valon Hoti     |
++----------------+
+4 rows in set (0.00 sec)
+mysql-sql> select B.contactname from orders A left outer join customers B on A.customerid = B.customerid
+       ... where b.customerid is null;
+Empty set (0.02 sec)
+mysql-sql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| ejercicios         |
+| ejercicios_copy12  |
+| ejercicios_copy13  |
+| ejercicios_copy14  |
+| evaluacion_2       |
+| gallitobd          |
+| inventario         |
+| inventario_copy    |
+| itch2              |
+| itch2_backup       |
+| mundo              |
+| mundo_copy         |
+| mysql              |
+| northwind          |
+| performance_schema |
+| test               |
+| topicos            |
+| topicos_copy       |
+| world              |
+| world_2            |
++--------------------+
+21 rows in set (0.16 sec)
+mysql-sql> show tables;
++----------------------+
+| Tables_in_northwind  |
++----------------------+
+| categories           |
+| customercustomerdemo |
+| customerdemographics |
+| customers            |
+| employees            |
+| employeeterritories  |
+| orderdetails         |
+| orders               |
+| products             |
+| region               |
+| shippers             |
+| suppliers            |
+| territories          |
++----------------------+
+13 rows in set (0.01 sec)
+mysql-sql> desc orderdetails;
++-----------+---------------+------+-----+---------+-------+
+| Field     | Type          | Null | Key | Default | Extra |
++-----------+---------------+------+-----+---------+-------+
+| OrderID   | int(11)       | NO   | PRI | null    |       |
+| ProductID | int(11)       | NO   | PRI | null    |       |
+| UnitPrice | decimal(10,4) | NO   |     | 0.0000  |       |
+| Quantity  | smallint(2)   | NO   |     | 1       |       |
+| Discount  | double(8,0)   | NO   |     | 0       |       |
++-----------+---------------+------+-----+---------+-------+
+5 rows in set (0.14 sec)
+mysql-sql> des products;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'des products' at line 1
+mysql-sql> desc products;
++-----------------+---------------+------+-----+---------+----------------+
+| Field           | Type          | Null | Key | Default | Extra          |
++-----------------+---------------+------+-----+---------+----------------+
+| ProductID       | int(11)       | NO   | PRI | null    | auto_increment |
+| ProductName     | varchar(40)   | NO   | MUL | null    |                |
+| SupplierID      | int(11)       | YES  | MUL | null    |                |
+| CategoryID      | int(11)       | YES  | MUL | null    |                |
+| QuantityPerUnit | varchar(20)   | YES  |     | null    |                |
+| UnitPrice       | decimal(10,4) | YES  |     | 0.0000  |                |
+| UnitsInStock    | smallint(2)   | YES  |     | 0       |                |
+| UnitsOnOrder    | smallint(2)   | YES  |     | 0       |                |
+| ReorderLevel    | smallint(2)   | YES  |     | 0       |                |
+| Discontinued    | bit(1)        | NO   |     | b'0'    |                |
++-----------------+---------------+------+-----+---------+----------------+
+10 rows in set (0.13 sec)
+mysql-sql> select A.orderdetails, B.products from orders A inner join customers B on A.productid = B.productid limit 30;
+ERROR: 1054 (42S22): Unknown column 'A.orderdetails' in 'field list'
+mysql-sql> select A.orderid, B.productname from orders A inner join customers B on A.productid = B.productid limit 30;
+ERROR: 1054 (42S22): Unknown column 'B.productname' in 'field list'
+mysql-sql> select A.orderid, B.productname, A.unitprice, A.quantity from orderdetails inner join customers B on A.productid = B.productid limit 30;
+ERROR: 1054 (42S22): Unknown column 'A.orderid' in 'field list'
+mysql-sql> select A.orderid, B.productname, A.unitprice, A.quantity from orderdetails A inner join customers B on A.productid = B.productid limit 30;
+ERROR: 1054 (42S22): Unknown column 'B.productname' in 'field list'
+mysql-sql> select B.productname from orderdetails A
+       ... right outer join products B on A.productid = B.productid where a.productid is null;
+Empty set (0.09 sec)
